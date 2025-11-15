@@ -12,7 +12,17 @@
     <div id="vis1"></div>
     <script type="text/javascript">
       var yourVlSpec = {
-          
+        "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+        "data": {"url": "detailed_wins_losses_for_divisions.csv"},
+        "mark": "rect",
+        "encoding": {
+            "y": {"field": "Team1", "type": "nominal"},
+            "x": {"field": "Team2", "type": "nominal"},
+            "color": {"field": "Percentage", "type": "quantitative"}
+        },
+        "config": {
+            "axis": {"grid": true, "tickBand": "extent"}
+        }
 
       };
       vegaEmbed("#vis1", yourVlSpec);
