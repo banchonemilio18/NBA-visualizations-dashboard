@@ -161,5 +161,62 @@
       };
       vegaEmbed("#vis4", yourV4Spec);
     </script>
+
+    <div id="vis5"></div>
+    <script type="text/javascript">
+      var yourV5Spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+        "data": {"url": "predicted_vs_actual_24-25.csv"},
+        "title": "Predicted vs Actual Win Percentage",
+        //"width": 300,
+        //"height": 300,
+
+        "layer": [
+            {
+                "mark": "circle",
+                "selection": {
+                    "highlight": {
+                        "type": "single",
+                        "on": "mouseover",
+                        "empty": "none"
+                    }
+                },
+                
+                "encoding": {
+                    "y": {"field": "WinPercentage", "type": "quantitative", "title": "Actual Win%", "scale": {"domain": [.20, .95]} },
+                    "x": {"field": "Predicted", "type": "quantitative", "title": "Predicted Win%", "scale": {"domain": [.20, .95]} },
+                    "color": {
+                        "condition": {
+                            "selection": "highlight",
+                            "value": "red"
+                        },
+                        "value": "blue"
+                    },
+                    "tooltip": [
+                        {"field": "Team", "type": "nominal"},
+                        {"field": "WinPercentage", "type": "quantitative"},
+                        {"field": "Predicted", "type": "quantitative"},
+                    ],
+                },
+
+            },
+            {
+                "mark": {"type": "line", "color": "red"},
+                "transform": [
+                    {"regression": "WinPercentage", "on": "Predicted"}
+                ],
+                "encoding": {
+                    "x": {"field": "Predicted", "type": "quantitative"},
+                    "y": {"field": "WinPercentage", "type": "quantitative"}
+                }
+            }
+        ]
+
+      };
+      vegaEmbed("#vis5", yourV5Spec);
+    </script> 
+
+
+
   </body>
 </html>
