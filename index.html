@@ -9,9 +9,9 @@
   <body>
 
 
-    <div id="vis1"></div>
+    <div id="vis3"></div>
     <script type="text/javascript">
-      var yourVlSpec = {
+      var yourV3Spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
         "data": {"url": "detailed_wins_losses_for_divisions.csv"},
         "title": "Divisional Record", // change name !!!!!!!!!!!!!
@@ -54,7 +54,49 @@
         }
 
       };
-      vegaEmbed("#vis1", yourVlSpec);
+      vegaEmbed("#vis3", yourV3Spec);
+    </script>
+
+
+
+    <div id="vis4"></div>
+    <script type="text/javascript">
+      var yourV4Spec = {
+        // was top line of csv
+        // ,,,,,,,,,,,,,,,,,,Offense Four Factors,Offense Four Factors,Offense Four Factors,Offense Four Factors,,Defense Four Factors,Defense Four Factors,Defense Four Factors,Defense Four Factors,,,,
+        "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+        "data": {"url": "offensive_defensive_ratings_per_team.csv"},
+        "title": "Teams Offesneive vs Defensive Ratings",
+        //"width": 300,
+        //"height": 300,
+
+        "mark": "circle",
+        "selection": {
+            "highlight": {
+                "type": "single",
+                "on": "mouseover",
+                "empty": "none"
+            }
+        },
+        "encoding": {
+            "y": {"field": "ORtg", "type": "quantitative", "title": "Offensive Rating", "scale": {"domain": [106, 123]} },
+            "x": {"field": "DRtg", "type": "quantitative", "title": "Defensive Rating", "scale": {"domain": [106, 122]} },
+            "color": {
+                "condition": {
+                    "selection": "highlight",
+                    "value": "red"
+                },
+                "value": "blue"
+            },
+            "tooltip": [
+                {"field": "Team", "type": "nominal"},
+                {"field": "ORtg", "type": "quantitative"},
+                {"field": "DRtg", "type": "quantitative"},
+            ],
+        },
+
+      };
+      vegaEmbed("#vis4", yourV4Spec);
     </script>
 
   </body>
