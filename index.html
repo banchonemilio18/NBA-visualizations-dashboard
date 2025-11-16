@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>NBA Data Visualizations</title>
@@ -7,97 +7,159 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.0.2"></script>
   </head>
   <body>
+    <div id="vis1"></div>
+    <script type="text/javascript">
+      var yourV1Spec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+        data: { url: "top10_players.csv" },
+        title: "Top 10 Players/Teams",
+        width: 300,
+        height: 300,
 
+        params: [
+          {
+            name: "Select",
+            select: { type: "point", fields: ["Player"] },
+            bind: {
+              input: "select",
+              options: [
+                "Shai Gilgeous-Alexander",
+                "Giannis Antetokounmpo",
+                "Nikola Jokić",
+                "Luka Dončić",
+                "Anthony Edwards",
+                "Jayson Tatum",
+                "Kevin Durant",
+                "Tyrese Maxey",
+                "Cade Cunningham",
+                "Jalen Brunson",
+              ],
+            },
+          },
+        ],
+        mark: { type: "bar", tooltip: { content: "data" } },
+        encoding: {
+          x: { field: "Player", type: "nominal" },
+          y: { field: "PTS", type: "quantitative" },
+          tooltip: [
+            { field: "PTS", type: "quantitative" },
+            { field: "FG%", type: "quantitative" },
+            { field: "3P%", type: "quantitative" },
+            { field: "MP", type: "quantitative" },
+          ],
+          color: {
+            condition: {
+              param: "Select",
+              field: "Player",
+              type: "nominal",
+            },
+            value: "grey",
+          },
+        },
+      };
+      vegaEmbed("#vis1", yourV1Spec);
+    </script>
 
     <div id="vis3"></div>
     <script type="text/javascript">
       var yourV3Spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-        "data": {"url": "detailed_wins_losses_for_divisions.csv"},
-        "title": "Divisional Record", // change name !!!!!!!!!!!!!
-        "width": 300,
-        "height": 300,
+        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+        data: { url: "detailed_wins_losses_for_divisions.csv" },
+        title: "Divisional Record", // change name !!!!!!!!!!!!!
+        width: 300,
+        height: 300,
 
-        "params": [
-            {
-                "name": "division_selector",
-                "value": "Atlantic",
-                "bind": {
-                    "input": "select",
-                    "options": ["Atlantic", "Central", "Southeast", "Southwest", "Northwest", "Pacific"],
-                    "name": "Division"
-                }
-            }
+        params: [
+          {
+            name: "division_selector",
+            value: "Atlantic",
+            bind: {
+              input: "select",
+              options: [
+                "Atlantic",
+                "Central",
+                "Southeast",
+                "Southwest",
+                "Northwest",
+                "Pacific",
+              ],
+              name: "Division",
+            },
+          },
         ],
 
-        "transform": [ 
-            {
-                "filter": "datum.Division == division_selector"
-            }
+        transform: [
+          {
+            filter: "datum.Division == division_selector",
+          },
         ],
 
-
-        "mark": "rect",
-        "encoding": {
-            "y": {"field": "Team1", "type": "nominal"},
-            "x": {"field": "Team2", "type": "nominal"},
-            "color": {"field": "Percentage", "type": "quantitative"},
-            "tooltip": [
-                {"field": "Team1", "type": "nominal"},
-                {"field": "Team2", "type": "nominal"},
-                {"field": "RecordForTeam1", "type": "nominal"},
-                {"field": "Percentage", "type": "quantitative"},
-            ],
+        mark: "rect",
+        encoding: {
+          y: { field: "Team1", type: "nominal" },
+          x: { field: "Team2", type: "nominal" },
+          color: { field: "Percentage", type: "quantitative" },
+          tooltip: [
+            { field: "Team1", type: "nominal" },
+            { field: "Team2", type: "nominal" },
+            { field: "RecordForTeam1", type: "nominal" },
+            { field: "Percentage", type: "quantitative" },
+          ],
         },
-        "config": {
-            "axis": {"grid": true, "tickBand": "extent"}
-        }
-
+        config: {
+          axis: { grid: true, tickBand: "extent" },
+        },
       };
       vegaEmbed("#vis3", yourV3Spec);
     </script>
-
-
 
     <div id="vis4"></div>
     <script type="text/javascript">
       var yourV4Spec = {
         // was top line of csv
         // ,,,,,,,,,,,,,,,,,,Offense Four Factors,Offense Four Factors,Offense Four Factors,Offense Four Factors,,Defense Four Factors,Defense Four Factors,Defense Four Factors,Defense Four Factors,,,,
-        "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-        "data": {"url": "offensive_defensive_ratings_per_team.csv"},
-        "title": "Teams Offesneive vs Defensive Ratings",
+        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+        data: { url: "offensive_defensive_ratings_per_team.csv" },
+        title: "Teams Offesneive vs Defensive Ratings",
         //"width": 300,
         //"height": 300,
 
-        "mark": "circle",
-        "selection": {
-            "highlight": {
-                "type": "single",
-                "on": "mouseover",
-                "empty": "none"
-            }
+        mark: "circle",
+        selection: {
+          highlight: {
+            type: "single",
+            on: "mouseover",
+            empty: "none",
+          },
         },
-        "encoding": {
-            "y": {"field": "ORtg", "type": "quantitative", "title": "Offensive Rating", "scale": {"domain": [106, 123]} },
-            "x": {"field": "DRtg", "type": "quantitative", "title": "Defensive Rating", "scale": {"domain": [106, 122]} },
-            "color": {
-                "condition": {
-                    "selection": "highlight",
-                    "value": "red"
-                },
-                "value": "blue"
+        encoding: {
+          y: {
+            field: "ORtg",
+            type: "quantitative",
+            title: "Offensive Rating",
+            scale: { domain: [106, 123] },
+          },
+          x: {
+            field: "DRtg",
+            type: "quantitative",
+            title: "Defensive Rating",
+            scale: { domain: [106, 122] },
+          },
+          color: {
+            condition: {
+              selection: "highlight",
+              value: "red",
             },
-            "tooltip": [
-                {"field": "Team", "type": "nominal"},
-                {"field": "ORtg", "type": "quantitative"},
-                {"field": "DRtg", "type": "quantitative"},
-            ],
+            value: "blue",
+          },
+          tooltip: [
+            { field: "Team", type: "nominal" },
+            { field: "ORtg", type: "quantitative" },
+            { field: "DRtg", type: "quantitative" },
+          ],
         },
-
       };
       vegaEmbed("#vis4", yourV4Spec);
     </script>
-
   </body>
 </html>
