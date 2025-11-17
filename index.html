@@ -60,6 +60,75 @@
       vegaEmbed("#vis1", yourV1Spec);
     </script>
 
+    <div id="vis2"></div>
+    <script type="text/javascript">
+      var yourV2Spec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+        data: { url: "wins_losses_by_Division.csv" },
+        title: "Divisional Stats", // change name !!!!!!!!!!!!!
+        //width: 300,
+        //height: 300,
+
+        params: [
+          {
+            name: "division_selector",
+            value: "Atlantic",
+            bind: {
+              input: "select",
+              options: [
+                "Atlantic",
+                "Central",
+                "Southeast",
+                "Southwest",
+                "Northwest",
+                "Pacific",
+              ],
+              name: "Division",
+            },
+          },
+          {
+            name: "stat_selector",
+            value: "W",
+            bind: {
+              input: "select",
+              options: [
+                "W",
+                "L",
+                "W/L%",
+                "PS/G",
+                "PA/G",
+                "SRS",
+              ],
+              name: "Stat:",
+            },
+          }
+        ],
+
+        transform: [
+          {
+            filter: "datum.Division == division_selector",
+          },
+          {
+            calculate: "toNumber(datum[stat_selector])", 
+            as: "StatValue"
+          },
+        ],
+
+        mark: "bar",
+        encoding: {
+          y: { field: "Team", type: "nominal" },
+          
+          x: { field: "StatValue", type: "quantitative" },
+          color: { value: "blue"},
+          tooltip: [
+            { field: "Team" },
+            { field: "StatValue", title: "Value" }
+          ]
+        },
+      };
+      vegaEmbed("#vis2", yourV2Spec);
+    </script>
+
     <div id="vis3"></div>
     <script type="text/javascript">
       var yourV3Spec = {
@@ -167,47 +236,47 @@
       var yourV5Spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
         "data": {"url": "predicted_vs_actual_24-25.csv"},
-        "title": "Predicted vs Actual Win Percentage",
+        title: "Predicted vs Actual Win Percentage",
         //"width": 300,
         //"height": 300,
 
-        "layer": [
+        layer: [
             {
-                "mark": "circle",
-                "selection": {
-                    "highlight": {
-                        "type": "single",
-                        "on": "mouseover",
-                        "empty": "none"
+                mark: "circle",
+                selection: {
+                    highlight: {
+                        type: "single",
+                        on: "mouseover",
+                        empty: "none"
                     }
                 },
                 
                 "encoding": {
-                    "y": {"field": "WinPercentage", "type": "quantitative", "title": "Actual Win%", "scale": {"domain": [.20, .95]} },
-                    "x": {"field": "Predicted", "type": "quantitative", "title": "Predicted Win%", "scale": {"domain": [.20, .95]} },
-                    "color": {
-                        "condition": {
-                            "selection": "highlight",
-                            "value": "red"
+                    y: {field: "WinPercentage", type: "quantitative", title: "Actual Win%", scale: {domain: [.20, .95]} },
+                    x: {field: "Predicted", type: "quantitative", title: "Predicted Win%", scale: {domain: [.20, .95]} },
+                    color: {
+                        condition: {
+                            selection: "highlight",
+                            value: "red"
                         },
-                        "value": "blue"
+                        value: "blue"
                     },
-                    "tooltip": [
-                        {"field": "Team", "type": "nominal"},
-                        {"field": "WinPercentage", "type": "quantitative"},
-                        {"field": "Predicted", "type": "quantitative"},
+                    tooltip: [
+                        {field: "Team", type: "nominal"},
+                        {field: "WinPercentage", type: "quantitative"},
+                        {field: "Predicted", type: "quantitative"},
                     ],
                 },
 
             },
             {
-                "mark": {"type": "line", "color": "red"},
-                "transform": [
-                    {"regression": "WinPercentage", "on": "Predicted"}
+                mark: {type: "line", color: "red"},
+                transform: [
+                    {regression: "WinPercentage", on: "Predicted"}
                 ],
-                "encoding": {
-                    "x": {"field": "Predicted", "type": "quantitative"},
-                    "y": {"field": "WinPercentage", "type": "quantitative"}
+                encoding: {
+                    x: {field: "Predicted", type: "quantitative"},
+                    y: {field: "WinPercentage", type: "quantitative"}
                 }
             }
         ]
