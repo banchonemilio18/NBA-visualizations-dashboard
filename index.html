@@ -7,57 +7,121 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.0.2"></script>
   </head>
   <body>
+    <label for="modeSelect">Choose Graph</label>
+    <select id="modeSelect">
+      <option value="Players">Players</option>
+      <option value="Teams">Teams</option>
+    </select>
     <div id="vis1"></div>
     <script type="text/javascript">
-      var yourV1Spec = {
+      const playerGraph = {
         $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+        title: "Top 10 Players",
         data: { url: "top10_players.csv" },
-        title: "Top 10 Players/Teams",
-        width: 300,
-        height: 300,
-
+        width: 400,
+        height: 400,
         params: [
-          {
-            name: "Select",
-            select: { type: "point", fields: ["Player"] },
-            bind: {
-              input: "select",
-              options: [
-                "Shai Gilgeous-Alexander",
-                "Giannis Antetokounmpo",
-                "Nikola Jokić",
-                "Luka Dončić",
-                "Anthony Edwards",
-                "Jayson Tatum",
-                "Kevin Durant",
-                "Tyrese Maxey",
-                "Cade Cunningham",
-                "Jalen Brunson",
-              ],
+            {
+              name: "Select",
+              select: { type: "point", fields: ["Player"] },
+              bind: {
+                input: "select",
+                options: [
+                  "Shai Gilgeous-Alexander",
+                  "Giannis Antetokounmpo",
+                  "Nikola Jokić",
+                  "Luka Dončić",
+                  "Anthony Edwards",
+                  "Jayson Tatum",
+                  "Kevin Durant",
+                  "Tyrese Maxey",
+                  "Cade Cunningham",
+                  "Jalen Brunson",
+                ],
+                name: "Player ",
+              },
             },
-          },
         ],
         mark: { type: "bar", tooltip: { content: "data" } },
         encoding: {
-          x: { field: "Player", type: "nominal" },
-          y: { field: "PTS", type: "quantitative" },
-          tooltip: [
-            { field: "PTS", type: "quantitative", title: "PPG" },
-            { field: "FG%", type: "quantitative" },
-            { field: "3P%", type: "quantitative" },
-            { field: "MP", type: "quantitative", title: "Minutes Played" },
-          ],
-          color: {
-            condition: {
-              param: "Select",
-              field: "Player",
-              type: "nominal",
+              x: { field: "Player", type: "nominal" },
+              y: { field: "PTS", type: "quantitative" },
+              tooltip: [
+                { field: "Player", type: "nominal"},
+                { field: "PTS", type: "quantitative", title: "PPG" },
+                { field: "FG%", type: "quantitative" },
+                { field: "3P%", type: "quantitative" },
+                { field: "MP", type: "quantitative", title: "Minutes Played" },
+              ],
+              color: {
+                condition: {
+                  param: "Select",
+                  field: "Player",
+                  type: "nominal",
+                },
+                value: "grey",
+              }
             },
-            value: "grey",
+        };
+        const teamGraph = {
+          $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+          data: { url: "top10_teams.csv" },
+          title: "Top 10 Teams",
+          width: 400,
+          height: 400,
+          params: [
+            {
+              name: "Select",
+              select: { type: "point", fields: ["Team"] },
+              bind: {
+                input: "select",
+                options: [
+                  "Cleveland Cavaliers",
+                  "Memphis Grizzlies",
+                  "Denver Nuggets",
+                  "Oklahoma City Thunder",
+                  "Atlanta Hawks",
+                  "Chicago Bulls",
+                  "Indiana Pacers",
+                  "Boston Celtics",
+                  "New York Knicks",
+                  "Sacramento Kings",
+                ],
+                name: "Team",
+              },
+            },
+          ],
+          mark: { type: "bar", tooltip: { content: "data" } },
+          encoding: {
+            x: { field: "Team", type: "nominal" },
+            y: { field: "PTS", type: "quantitative" },
+            tooltip: [
+              { field: "Team", type: "nominal"},
+              { field: "PTS", type: "quantitative", title: "PPG" },
+              { field: "FG%", type: "quantitative" },
+              { field: "3P%", type: "quantitative" },
+              { field: "MP", type: "quantitative", title: "Minutes Played" },
+            ],
+            color: {
+              condition: {
+                param: "Select",
+                field: "Team",
+                type: "nominal",
+              },
+              value: "grey",
+            }, 
           },
-        },
       };
-      vegaEmbed("#vis1", yourV1Spec);
+      function chooseGraph(){
+        const mode = document.getElementById("modeSelect").value;
+        if(mode == "Players"){
+          vegaEmbed("#vis1", playerGraph);
+        }else{
+          vegaEmbed("#vis1", teamGraph);
+        }
+      }
+      chooseGraph();
+      document.getElementById("modeSelect").addEventListener("change", chooseGraph);
     </script>
 
     <div id="vis2"></div>
@@ -112,7 +176,13 @@
           y: { field: "Team", type: "nominal" },
 
           x: { field: "StatValue", type: "quantitative" },
-          color: { value: "blue" },
+          color: { condition: {
+              param: "division_selector",
+              field: "Team",
+              type: "nominal",
+            },
+            value: "grey",
+          },
           tooltip: [{ field: "Team" }, { field: "StatValue", title: "Value" }],
         },
       };
@@ -179,7 +249,7 @@
         // ,,,,,,,,,,,,,,,,,,Offense Four Factors,Offense Four Factors,Offense Four Factors,Offense Four Factors,,Defense Four Factors,Defense Four Factors,Defense Four Factors,Defense Four Factors,,,,
         $schema: "https://vega.github.io/schema/vega-lite/v6.json",
         data: { url: "offensive_defensive_ratings_per_team.csv" },
-        title: "Teams Offesneive vs Defensive Ratings",
+        title: "Teams Offensive vs Defensive Ratings",
         //"width": 300,
         //"height": 300,
 
