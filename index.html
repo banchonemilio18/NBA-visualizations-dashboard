@@ -42,10 +42,10 @@
           x: { field: "Player", type: "nominal" },
           y: { field: "PTS", type: "quantitative" },
           tooltip: [
-            { field: "PTS", type: "quantitative" },
+            { field: "PTS", type: "quantitative", title: "PPG" },
             { field: "FG%", type: "quantitative" },
             { field: "3P%", type: "quantitative" },
-            { field: "MP", type: "quantitative" },
+            { field: "MP", type: "quantitative", title: "Minutes Played" },
           ],
           color: {
             condition: {
@@ -165,58 +165,61 @@
     <div id="vis5"></div>
     <script type="text/javascript">
       var yourV5Spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-        "data": {"url": "predicted_vs_actual_24-25.csv"},
-        "title": "Predicted vs Actual Win Percentage",
+        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+        data: { url: "predicted_vs_actual_24-25.csv" },
+        title: "Predicted vs Actual Win Percentage",
         //"width": 300,
         //"height": 300,
 
-        "layer": [
-            {
-                "mark": "circle",
-                "selection": {
-                    "highlight": {
-                        "type": "single",
-                        "on": "mouseover",
-                        "empty": "none"
-                    }
-                },
-                
-                "encoding": {
-                    "y": {"field": "WinPercentage", "type": "quantitative", "title": "Actual Win%", "scale": {"domain": [.20, .95]} },
-                    "x": {"field": "Predicted", "type": "quantitative", "title": "Predicted Win%", "scale": {"domain": [.20, .95]} },
-                    "color": {
-                        "condition": {
-                            "selection": "highlight",
-                            "value": "red"
-                        },
-                        "value": "blue"
-                    },
-                    "tooltip": [
-                        {"field": "Team", "type": "nominal"},
-                        {"field": "WinPercentage", "type": "quantitative"},
-                        {"field": "Predicted", "type": "quantitative"},
-                    ],
-                },
-
+        layer: [
+          {
+            mark: "circle",
+            selection: {
+              highlight: {
+                type: "single",
+                on: "mouseover",
+                empty: "none",
+              },
             },
-            {
-                "mark": {"type": "line", "color": "red"},
-                "transform": [
-                    {"regression": "WinPercentage", "on": "Predicted"}
-                ],
-                "encoding": {
-                    "x": {"field": "Predicted", "type": "quantitative"},
-                    "y": {"field": "WinPercentage", "type": "quantitative"}
-                }
-            }
-        ]
 
+            encoding: {
+              y: {
+                field: "WinPercentage",
+                type: "quantitative",
+                title: "Actual Win%",
+                scale: { domain: [0.2, 0.95] },
+              },
+              x: {
+                field: "Predicted",
+                type: "quantitative",
+                title: "Predicted Win%",
+                scale: { domain: [0.2, 0.95] },
+              },
+              color: {
+                condition: {
+                  selection: "highlight",
+                  value: "red",
+                },
+                value: "blue",
+              },
+              tooltip: [
+                { field: "Team", type: "nominal" },
+                { field: "WinPercentage", type: "quantitative" },
+                { field: "Predicted", type: "quantitative" },
+              ],
+            },
+          },
+          {
+            mark: { type: "line", color: "red" },
+            transform: [{ regression: "WinPercentage", on: "Predicted" }],
+            encoding: {
+              x: { field: "Predicted", type: "quantitative" },
+              y: { field: "WinPercentage", type: "quantitative" },
+            },
+          },
+        ],
       };
       vegaEmbed("#vis5", yourV5Spec);
-    </script> 
-
-
-
+    </script>
   </body>
 </html>
