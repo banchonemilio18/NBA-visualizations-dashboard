@@ -21,107 +21,109 @@
         width: 400,
         height: 400,
         params: [
-            {
-              name: "Select",
-              select: { type: "point", fields: ["Player"] },
-              bind: {
-                input: "select",
-                options: [
-                  "Shai Gilgeous-Alexander",
-                  "Giannis Antetokounmpo",
-                  "Nikola Jokić",
-                  "Luka Dončić",
-                  "Anthony Edwards",
-                  "Jayson Tatum",
-                  "Kevin Durant",
-                  "Tyrese Maxey",
-                  "Cade Cunningham",
-                  "Jalen Brunson",
-                ],
-                name: "Player ",
-              },
+          {
+            name: "Select",
+            select: { type: "point", fields: ["Player"] },
+            bind: {
+              input: "select",
+              options: [
+                "Shai Gilgeous-Alexander",
+                "Giannis Antetokounmpo",
+                "Nikola Jokić",
+                "Luka Dončić",
+                "Anthony Edwards",
+                "Jayson Tatum",
+                "Kevin Durant",
+                "Tyrese Maxey",
+                "Cade Cunningham",
+                "Jalen Brunson",
+              ],
+              name: "Player ",
             },
+          },
         ],
         mark: { type: "bar", tooltip: { content: "data" } },
         encoding: {
-              x: { field: "Player", type: "nominal" },
-              y: { field: "PTS", type: "quantitative" },
-              tooltip: [
-                { field: "Player", type: "nominal"},
-                { field: "PTS", type: "quantitative", title: "PPG" },
-                { field: "FG%", type: "quantitative" },
-                { field: "3P%", type: "quantitative" },
-                { field: "MP", type: "quantitative", title: "Minutes Played" },
-              ],
-              color: {
-                condition: {
-                  param: "Select",
-                  field: "Player",
-                  type: "nominal",
-                },
-                value: "grey",
-              }
-            },
-        };
-        const teamGraph = {
-          $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-          data: { url: "top10_teams.csv" },
-          title: "Top 10 Teams",
-          width: 400,
-          height: 400,
-          params: [
-            {
-              name: "Select",
-              select: { type: "point", fields: ["Team"] },
-              bind: {
-                input: "select",
-                options: [
-                  "Cleveland Cavaliers",
-                  "Memphis Grizzlies",
-                  "Denver Nuggets",
-                  "Oklahoma City Thunder",
-                  "Atlanta Hawks",
-                  "Chicago Bulls",
-                  "Indiana Pacers",
-                  "Boston Celtics",
-                  "New York Knicks",
-                  "Sacramento Kings",
-                ],
-                name: "Team",
-              },
-            },
+          x: { field: "Player", type: "nominal" },
+          y: { field: "PTS", type: "quantitative" },
+          tooltip: [
+            { field: "Player", type: "nominal" },
+            { field: "PTS", type: "quantitative", title: "PPG" },
+            { field: "FG%", type: "quantitative" },
+            { field: "3P%", type: "quantitative" },
+            { field: "MP", type: "quantitative", title: "Minutes Played" },
           ],
-          mark: { type: "bar", tooltip: { content: "data" } },
-          encoding: {
-            x: { field: "Team", type: "nominal" },
-            y: { field: "PTS", type: "quantitative" },
-            tooltip: [
-              { field: "Team", type: "nominal"},
-              { field: "PTS", type: "quantitative", title: "PPG" },
-              { field: "FG%", type: "quantitative" },
-              { field: "3P%", type: "quantitative" },
-              { field: "MP", type: "quantitative", title: "Minutes Played" },
-            ],
-            color: {
-              condition: {
-                param: "Select",
-                field: "Team",
-                type: "nominal",
-              },
-              value: "grey",
-            }, 
+          color: {
+            condition: {
+              param: "Select",
+              field: "Player",
+              type: "nominal",
+            },
+            value: "grey",
           },
+        },
       };
-      function chooseGraph(){
+      const teamGraph = {
+        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+        data: { url: "top10_teams.csv" },
+        title: "Top 10 Teams",
+        width: 400,
+        height: 400,
+        params: [
+          {
+            name: "Select",
+            select: { type: "point", fields: ["Team"] },
+            bind: {
+              input: "select",
+              options: [
+                "Cleveland Cavaliers",
+                "Memphis Grizzlies",
+                "Denver Nuggets",
+                "Oklahoma City Thunder",
+                "Atlanta Hawks",
+                "Chicago Bulls",
+                "Indiana Pacers",
+                "Boston Celtics",
+                "New York Knicks",
+                "Sacramento Kings",
+              ],
+              name: "Team",
+            },
+          },
+        ],
+        mark: { type: "bar", tooltip: { content: "data" } },
+        encoding: {
+          x: { field: "Team", type: "nominal" },
+          y: { field: "PTS", type: "quantitative" },
+          tooltip: [
+            { field: "Team", type: "nominal" },
+            { field: "PTS", type: "quantitative", title: "PPG" },
+            { field: "FG%", type: "quantitative" },
+            { field: "3P%", type: "quantitative" },
+            { field: "MP", type: "quantitative", title: "Minutes Played" },
+          ],
+          color: {
+            condition: {
+              param: "Select",
+              field: "Team",
+              type: "nominal",
+            },
+            value: "grey",
+          },
+        },
+      };
+      function chooseGraph() {
         const mode = document.getElementById("modeSelect").value;
-        if(mode == "Players"){
+        if (mode == "Players") {
           vegaEmbed("#vis1", playerGraph);
-        }else{
+        } else {
           vegaEmbed("#vis1", teamGraph);
         }
       }
       chooseGraph();
-      document.getElementById("modeSelect").addEventListener("change", chooseGraph);
+      document
+        .getElementById("modeSelect")
+        .addEventListener("change", chooseGraph);
     </script>
 
     <div id="vis2"></div>
@@ -176,7 +178,8 @@
           y: { field: "Team", type: "nominal" },
 
           x: { field: "StatValue", type: "quantitative" },
-          color: { condition: {
+          color: {
+            condition: {
               param: "division_selector",
               field: "Team",
               type: "nominal",
