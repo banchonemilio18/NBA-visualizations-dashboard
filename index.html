@@ -87,7 +87,7 @@
                   "New York Knicks",
                   "Sacramento Kings",
                 ],
-                name: "Team",
+                name: "Team ",
               },
             },
           ],
@@ -124,46 +124,43 @@
       document.getElementById("modeSelect").addEventListener("change", chooseGraph);
     </script>
 
+    <label for="divisionSelect">Division</label>
+    <select id="divisionSelect">
+      <option value="Atlantic">Atlantic</option>
+      <option value="Central">Central</option>
+      <option value="Southeast">Southeast</option>
+      <option value="Southwest">Southwest</option>
+      <option value="Northwest">Northwest</option>
+      <option value="Pacific">Pacific</option>
+    </select>
     <div id="vis2"></div>
+    <div id="vis3"></div>
     <script type="text/javascript">
-      var yourV2Spec = {
+      function updateGraph(){
+        const selectedDivision = document.getElementById("divisionSelect").value;
+
+        const yourV2Spec = {
         $schema: "https://vega.github.io/schema/vega-lite/v6.json",
         data: { url: "wins_losses_by_Division.csv" },
         title: "Divisional Stats", // change name !!!!!!!!!!!!!
-        //width: 300,
-        //height: 300,
+        width: 500,
+        height: 200,
 
         params: [
-          {
-            name: "division_selector",
-            value: "Atlantic",
-            bind: {
-              input: "select",
-              options: [
-                "Atlantic",
-                "Central",
-                "Southeast",
-                "Southwest",
-                "Northwest",
-                "Pacific",
-              ],
-              name: "Division",
-            },
-          },
           {
             name: "stat_selector",
             value: "W",
             bind: {
               input: "select",
               options: ["W", "L", "W/L%", "PS/G", "PA/G", "SRS"],
-              name: "Stat:",
+              name: "Type of Stat ",
             },
           },
         ],
 
         transform: [
           {
-            filter: "datum.Division == division_selector",
+            filter: `datum.Division == '${selectedDivision}'`,
           },
           {
             calculate: "toNumber(datum[stat_selector])",
@@ -174,52 +171,24 @@
         mark: "bar",
         encoding: {
           y: { field: "Team", type: "nominal" },
-
           x: { field: "StatValue", type: "quantitative" },
-          color: { condition: {
-              param: "division_selector",
-              field: "Team",
-              type: "nominal",
-            },
-            value: "grey",
-          },
+          color: { field: "Team", type: "nominal",},
+          value: "grey",
           tooltip: [{ field: "Team" }, { field: "StatValue", title: "Value" }],
-        },
+          },
       };
       vegaEmbed("#vis2", yourV2Spec);
-    </script>
 
-    <div id="vis3"></div>
-    <script type="text/javascript">
-      var yourV3Spec = {
+      const yourV3Spec = {
         $schema: "https://vega.github.io/schema/vega-lite/v6.json",
         data: { url: "detailed_wins_losses_for_divisions.csv" },
         title: "Divisional Record", // change name !!!!!!!!!!!!!
         width: 300,
         height: 300,
 
-        params: [
-          {
-            name: "division_selector",
-            value: "Atlantic",
-            bind: {
-              input: "select",
-              options: [
-                "Atlantic",
-                "Central",
-                "Southeast",
-                "Southwest",
-                "Northwest",
-                "Pacific",
-              ],
-              name: "Division",
-            },
-          },
-        ],
-
         transform: [
           {
-            filter: "datum.Division == division_selector",
+            filter: `datum.Division == '${selectedDivision}'`,
           },
         ],
 
@@ -240,6 +209,10 @@
         },
       };
       vegaEmbed("#vis3", yourV3Spec);
+      }
+      updateGraph();
+      
+      document.getElementById("divisionSelect").addEventListener("change", updateGraph);
     </script>
 
     <div id="vis4"></div>
@@ -250,10 +223,9 @@
         $schema: "https://vega.github.io/schema/vega-lite/v6.json",
         data: { url: "offensive_defensive_ratings_per_team.csv" },
         title: "Teams Offensive vs Defensive Ratings",
-        //"width": 300,
-        //"height": 300,
-
-        mark: "circle",
+        "width": 400,
+        "height": 400,
+        mark: {type: "circle", size: 80},
         selection: {
           highlight: {
             type: "single",
