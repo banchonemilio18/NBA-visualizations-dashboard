@@ -1,0 +1,32 @@
+body{
+    text-align: center;
+    margin-top: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header{
+    text-align: center;
+    font-size: large;
+    font-weight: bold;
+    padding: 20px;
+}
+
+#vis1, #vis2, #vis3, #vis4, #vis5 {
+    text-align: center;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+}
+
+p{
+    text-align: center;
+    padding: 10px;
+
+}
+
+footer{
+    text-align: center;
+    font-weight: bold;
+    padding: 20px;
+}
