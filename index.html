@@ -5,7 +5,11 @@
     <script src="https://cdn.jsdelivr.net/npm/vega@6.1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.2.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.0.2"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
+
+  <header>The 2024-2025 NBA Season by the Numbers</header>
+
   <body>
     <label for="modeSelect">Choose Graph</label>
     <select id="modeSelect">
@@ -63,6 +67,7 @@
           },
         },
       };
+
       const teamGraph = {
         $schema: "https://vega.github.io/schema/vega-lite/v6.json",
         data: { url: "top10_teams.csv" },
@@ -126,232 +131,247 @@
         .addEventListener("change", chooseGraph);
     </script>
 
+    <p>
+      This graph displays the top 10 players in the 24-25 season by points with
+      a deeper look into their point per game (PPG) , field goal percentage
+      (FG%), three point percentage (3P%), and their minutes played. You can
+      also filter for the top 10 teams and look for the same statistics.
+    </p>
+
+    <label for="divisionSelect">Division</label>
+    <select id="divisionSelect">
+      <option value="Atlantic">Atlantic</option>
+      <option value="Central">Central</option>
+      <option value="Southeast">Southeast</option>
+      <option value="Southwest">Southwest</option>
+      <option value="Northwest">Northwest</option>
+      <option value="Pacific">Pacific</option>
+    </select>
     <div id="vis2"></div>
-    <script type="text/javascript">
-      var yourV2Spec = {
-        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-        data: { url: "wins_losses_by_Division.csv" },
-        title: "Divisional Stats", // change name !!!!!!!!!!!!!
-        //width: 300,
-        //height: 300,
-
-        params: [
-          {
-            name: "division_selector",
-            value: "Atlantic",
-            bind: {
-              input: "select",
-              options: [
-                "Atlantic",
-                "Central",
-                "Southeast",
-                "Southwest",
-                "Northwest",
-                "Pacific",
-              ],
-              name: "Division",
-            },
-          },
-          {
-            name: "stat_selector",
-            value: "W",
-            bind: {
-              input: "select",
-              options: ["W", "L", "W/L%", "PS/G", "PA/G", "SRS"],
-              name: "Stat:",
-            },
-          },
-        ],
-
-        transform: [
-          {
-            filter: "datum.Division == division_selector",
-          },
-          {
-            calculate: "toNumber(datum[stat_selector])",
-            as: "StatValue",
-          },
-        ],
-
-        mark: "bar",
-        encoding: {
-          y: { field: "Team", type: "nominal" },
-
-          x: { field: "StatValue", type: "quantitative" },
-          color: {
-            condition: {
-              param: "division_selector",
-              field: "Team",
-              type: "nominal",
-            },
-            value: "grey",
-          },
-          tooltip: [{ field: "Team" }, { field: "StatValue", title: "Value" }],
-        },
-      };
-      vegaEmbed("#vis2", yourV2Spec);
-    </script>
-
     <div id="vis3"></div>
     <script type="text/javascript">
-      var yourV3Spec = {
-        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-        data: { url: "detailed_wins_losses_for_divisions.csv" },
-        title: "Divisional Record", // change name !!!!!!!!!!!!!
-        width: 300,
-        height: 300,
+      function updateGraph() {
+        const selectedDivision =
+          document.getElementById("divisionSelect").value;
 
-        params: [
-          {
-            name: "division_selector",
-            value: "Atlantic",
-            bind: {
-              input: "select",
-              options: [
-                "Atlantic",
-                "Central",
-                "Southeast",
-                "Southwest",
-                "Northwest",
-                "Pacific",
-              ],
-              name: "Division",
+        const yourV2Spec = {
+          $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+          data: { url: "wins_losses_by_Division.csv" },
+          title: "Divisional Stats", // change name !!!!!!!!!!!!!
+          width: 400,
+          height: 400,
+
+          params: [
+            {
+              name: "stat_selector",
+              value: "W",
+              bind: {
+                input: "select",
+                options: ["W", "L", "W/L%", "PS/G", "PA/G", "SRS"],
+                name: "Type of Stat ",
+              },
             },
-          },
-        ],
-
-        transform: [
-          {
-            filter: "datum.Division == division_selector",
-          },
-        ],
-
-        mark: "rect",
-        encoding: {
-          y: { field: "Team1", type: "nominal" },
-          x: { field: "Team2", type: "nominal" },
-          color: { field: "Percentage", type: "quantitative" },
-          tooltip: [
-            { field: "Team1", type: "nominal" },
-            { field: "Team2", type: "nominal" },
-            { field: "RecordForTeam1", type: "nominal" },
-            { field: "Percentage", type: "quantitative" },
           ],
-        },
-        config: {
-          axis: { grid: true, tickBand: "extent" },
-        },
-      };
-      vegaEmbed("#vis3", yourV3Spec);
+
+          transform: [
+            {
+              filter: `datum.Division == '${selectedDivision}'`,
+            },
+            {
+              calculate: "toNumber(datum[stat_selector])",
+              as: "StatValue",
+            },
+          ],
+
+          mark: "bar",
+          encoding: {
+            y: { field: "Team", type: "nominal" },
+            x: { field: "StatValue", type: "quantitative" },
+            color: { field: "Team", type: "nominal" },
+            value: "grey",
+            tooltip: [
+              { field: "Team" },
+              { field: "StatValue", title: "Value" },
+            ],
+          },
+        };
+        vegaEmbed("#vis2", yourV2Spec);
+
+        const yourV3Spec = {
+          $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+          data: { url: "detailed_wins_losses_for_divisions.csv" },
+          title: "Divisional Record", // change name !!!!!!!!!!!!!
+          width: 400,
+          height: 400,
+
+          transform: [
+            {
+              filter: `datum.Division == '${selectedDivision}'`,
+            },
+          ],
+
+          mark: "rect",
+          encoding: {
+            y: { field: "Team1", type: "nominal" },
+            x: { field: "Team2", type: "nominal" },
+            color: { field: "Percentage", type: "quantitative" },
+            tooltip: [
+              { field: "Team1", type: "nominal" },
+              { field: "Team2", type: "nominal" },
+              { field: "RecordForTeam1", type: "nominal" },
+              { field: "Percentage", type: "quantitative" },
+            ],
+          },
+          config: {
+            axis: { grid: true, tickBand: "extent" },
+          },
+        };
+        vegaEmbed("#vis3", yourV3Spec);
+      }
+      updateGraph();
+
+      document
+        .getElementById("divisionSelect")
+        .addEventListener("change", updateGraph);
     </script>
 
-    <div id="vis4"></div>
-    <script type="text/javascript">
-      var yourV4Spec = {
-        // was top line of csv
-        // ,,,,,,,,,,,,,,,,,,Offense Four Factors,Offense Four Factors,Offense Four Factors,Offense Four Factors,,Defense Four Factors,Defense Four Factors,Defense Four Factors,Defense Four Factors,,,,
-        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-        data: { url: "offensive_defensive_ratings_per_team.csv" },
-        title: "Teams Offensive vs Defensive Ratings",
-        //"width": 300,
-        //"height": 300,
+    <p>
+      This graph displays the inner division record for each team of the
+      2024-2025 NBA season. You can filter by division using the drop down
+      button. Each divison cosists of five teams. This heatmap displays how each
+      team performed againsts the other teams in its devision.
+    </p>
 
-        mark: "circle",
-        selection: {
-          highlight: {
-            type: "single",
-            on: "mouseover",
-            empty: "none",
-          },
-        },
-        encoding: {
-          y: {
-            field: "ORtg",
-            type: "quantitative",
-            title: "Offensive Rating",
-            scale: { domain: [106, 123] },
-          },
-          x: {
-            field: "DRtg",
-            type: "quantitative",
-            title: "Defensive Rating",
-            scale: { domain: [106, 122] },
-          },
-          color: {
-            condition: {
-              selection: "highlight",
-              value: "red",
+    <div id="vis4">
+      <script type="text/javascript">
+        var yourV4Spec = {
+          // was top line of csv
+          // ,,,,,,,,,,,,,,,,,,Offense Four Factors,Offense Four Factors,Offense Four Factors,Offense Four Factors,,Defense Four Factors,Defense Four Factors,Defense Four Factors,Defense Four Factors,,,,
+          $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+          data: { url: "offensive_defensive_ratings_per_team.csv" },
+          title: "Teams Offensive vs Defensive Ratings",
+          width: 400,
+          height: 400,
+          mark: { type: "circle", size: 80 },
+          selection: {
+            highlight: {
+              type: "single",
+              on: "mouseover",
+              empty: "none",
             },
-            value: "blue",
           },
-          tooltip: [
-            { field: "Team", type: "nominal" },
-            { field: "ORtg", type: "quantitative" },
-            { field: "DRtg", type: "quantitative" },
-          ],
-        },
-      };
-      vegaEmbed("#vis4", yourV4Spec);
-    </script>
-
-    <div id="vis5"></div>
-    <script type="text/javascript">
-      var yourV5Spec = {
-        $schema: "https://vega.github.io/schema/vega-lite/v6.json",
-        data: { url: "predicted_vs_actual_24-25.csv" },
-        title: "Predicted vs Actual Win Percentage",
-        //"width": 300,
-        //"height": 300,
-
-        layer: [
-          {
-            mark: "circle",
-            selection: {
-              highlight: {
-                type: "single",
-                on: "mouseover",
-                empty: "none",
-              },
+          encoding: {
+            y: {
+              field: "ORtg",
+              type: "quantitative",
+              title: "Offensive Rating",
+              scale: { domain: [106, 123] },
             },
+            x: {
+              field: "DRtg",
+              type: "quantitative",
+              title: "Defensive Rating",
+              scale: { domain: [106, 122] },
+            },
+            color: {
+              condition: {
+                selection: "highlight",
+                value: "red",
+              },
+              value: "blue",
+            },
+            tooltip: [
+              { field: "Team", type: "nominal" },
+              { field: "ORtg", type: "quantitative" },
+              { field: "DRtg", type: "quantitative" },
+            ],
+          },
+        };
+        vegaEmbed("#vis4", yourV4Spec);
+      </script>
+    </div>
+    <p>
+      This graph displays the offensive rating compared to the defensive rating
+      for each team in the 2024-2025 NBA season. The offensive rating is
+      measured by how many points a team generates per 100 possessions. A
+      defensive rating is calculted by the average number of points a team
+      allows per 100 possessions.
+    </p>
 
-            encoding: {
-              y: {
-                field: "WinPercentage",
-                type: "quantitative",
-                title: "Actual Win%",
-                scale: { domain: [0.2, 0.95] },
-              },
-              x: {
-                field: "Predicted",
-                type: "quantitative",
-                title: "Predicted Win%",
-                scale: { domain: [0.2, 0.95] },
-              },
-              color: {
-                condition: {
-                  selection: "highlight",
-                  value: "red",
+    <div id="vis5">
+      <script type="text/javascript">
+        var yourV5Spec = {
+          $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+          data: { url: "predicted_vs_actual_24-25.csv" },
+          title: "Predicted vs Actual Win Percentage",
+          width: 400,
+          height: 400,
+
+          layer: [
+            {
+              mark: { type: "circle", size: 80 },
+              selection: {
+                highlight: {
+                  type: "single",
+                  on: "mouseover",
+                  empty: "none",
                 },
-                value: "blue",
               },
-              tooltip: [
-                { field: "Team", type: "nominal" },
-                { field: "WinPercentage", type: "quantitative" },
-                { field: "Predicted", type: "quantitative" },
-              ],
+
+              encoding: {
+                y: {
+                  field: "WinPercentage",
+                  type: "quantitative",
+                  title: "Actual Win%",
+                  scale: { domain: [0.2, 0.95] },
+                },
+                x: {
+                  field: "Predicted",
+                  type: "quantitative",
+                  title: "Predicted Win%",
+                  scale: { domain: [0.2, 0.95] },
+                },
+                color: {
+                  condition: {
+                    selection: "highlight",
+                    value: "red",
+                  },
+                  value: "blue",
+                },
+                tooltip: [
+                  { field: "Team", type: "nominal" },
+                  { field: "WinPercentage", type: "quantitative" },
+                  { field: "Predicted", type: "quantitative" },
+                ],
+              },
             },
-          },
-          {
-            mark: { type: "line", color: "red" },
-            transform: [{ regression: "WinPercentage", on: "Predicted" }],
-            encoding: {
-              x: { field: "Predicted", type: "quantitative" },
-              y: { field: "WinPercentage", type: "quantitative" },
+            {
+              mark: { type: "line", color: "red" },
+              transform: [{ regression: "WinPercentage", on: "Predicted" }],
+              encoding: {
+                x: { field: "Predicted", type: "quantitative" },
+                y: { field: "WinPercentage", type: "quantitative" },
+              },
             },
-          },
-        ],
-      };
-      vegaEmbed("#vis5", yourV5Spec);
-    </script>
+          ],
+        };
+        vegaEmbed("#vis5", yourV5Spec);
+      </script>
+    </div>
+
+    <p>
+      This graph displays the predicted win precentages for ach tema nbased on
+      the 2023-2024 NBA season compared to the actual win percentages from the
+      2024-2025 season. Each point displays the team, their predicted win
+      percentage, and their actual win precentage. The regression line shows how
+      close the predictions for a team were to the actual win percentage.
+    </p>
   </body>
+
+  <footer>
+    All statistics were sourced from by Basketball-Referecene.com
+    <a href="https://www.basketball-reference.com/leagues/NBA_2025.html">
+      BasketBall-Reference.com
+    </a>
+  </footer>
 </html>
