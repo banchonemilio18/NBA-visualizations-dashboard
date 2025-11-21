@@ -42,7 +42,7 @@
                 "Cade Cunningham",
                 "Jalen Brunson",
               ],
-              name: "Player ",
+              name: "Player  ",
             },
           },
         ],
@@ -92,7 +92,7 @@
                 "New York Knicks",
                 "Sacramento Kings",
               ],
-              name: "Team",
+              name: "Team  ",
             },
           },
         ],
@@ -147,8 +147,10 @@
       <option value="Northwest">Northwest</option>
       <option value="Pacific">Pacific</option>
     </select>
-    <div id="vis2"></div>
-    <div id="vis3"></div>
+    <div class="vis-row">
+      <div id="vis2"></div>
+      <div id="vis3"></div>
+    </div>
     <script type="text/javascript">
       function updateGraph() {
         const selectedDivision =
@@ -236,10 +238,10 @@
     </script>
 
     <p>
-      This graph displays the inner division record for each team of the
+      This graph to left displays the inner division record for each team of the
       2024-2025 NBA season. You can filter by division using the drop down
-      button. Each divison cosists of five teams. This heatmap displays how each
-      team performed againsts the other teams in its devision.
+      button. Each division consists of five teams. On the other hand, the heatmap on the right displays how each
+      team performed againsts the other teams in its division.
     </p>
 
     <div id="vis4">
@@ -360,7 +362,7 @@
     </div>
 
     <p>
-      This graph displays the predicted win precentages for ach tema nbased on
+      This graph displays the predicted win precentages for each team based on
       the 2023-2024 NBA season compared to the actual win percentages from the
       2024-2025 season. Each point displays the team, their predicted win
       percentage, and their actual win precentage. The regression line shows how
