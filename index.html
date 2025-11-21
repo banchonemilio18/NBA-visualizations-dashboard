@@ -184,18 +184,35 @@
               as: "StatValue",
             },
           ],
-
-          mark: "bar",
-          encoding: {
-            y: { field: "Team", type: "nominal" },
-            x: { field: "StatValue", type: "quantitative" },
-            color: { field: "Team", type: "nominal" },
-            value: "grey",
-            tooltip: [
-              { field: "Team" },
-              { field: "StatValue", title: "Value" },
+          layer: [
+            {
+            mark: "bar",
+            encoding: {
+              y: { field: "Team", type: "nominal" },
+              x: { field: "StatValue", type: "quantitative" },
+              color: { field: "Team", type: "nominal" },
+              value: "grey",
+              tooltip: [
+                { field: "Team" },
+                { field: "StatValue", title: "Value" },
+              ],
+            }
+            },
+            {
+            mark: { type: "image", width: 40, height: 40 },
+            transform: [
+              {
+                calculate: "datum.StatValue / 2",
+                as: "Mid"
+              }
             ],
-          },
+            encoding: {
+              y: { field: "Team", type: "nominal" },
+              x: { field: "Mid", type: "quantitative"},
+              url: { field: "Logo"},
+            },
+            }
+          ]
         };
         vegaEmbed("#vis2", yourV2Spec);
 
