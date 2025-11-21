@@ -186,33 +186,33 @@
           ],
           layer: [
             {
-            mark: "bar",
-            encoding: {
-              y: { field: "Team", type: "nominal" },
-              x: { field: "StatValue", type: "quantitative" },
-              color: { field: "Team", type: "nominal" },
-              value: "grey",
-              tooltip: [
-                { field: "Team" },
-                { field: "StatValue", title: "Value" },
-              ],
-            }
+              mark: "bar",
+              encoding: {
+                y: { field: "Team", type: "nominal" },
+                x: { field: "StatValue", type: "quantitative" },
+                color: { field: "Team", type: "nominal" },
+                value: "grey",
+                tooltip: [
+                  { field: "Team" },
+                  { field: "StatValue", title: "Value" },
+                ],
+              },
             },
             {
-            mark: { type: "image", width: 40, height: 40 },
-            transform: [
-              {
-                calculate: "datum.StatValue / 2",
-                as: "Mid"
-              }
-            ],
-            encoding: {
-              y: { field: "Team", type: "nominal" },
-              x: { field: "Mid", type: "quantitative"},
-              url: { field: "Logo"},
+              mark: { type: "image", width: 40, height: 40 },
+              transform: [
+                {
+                  calculate: "datum.StatValue / 2",
+                  as: "Mid",
+                },
+              ],
+              encoding: {
+                y: { field: "Team", type: "nominal" },
+                x: { field: "Mid", type: "quantitative" },
+                url: { field: "Logo" },
+              },
             },
-            }
-          ]
+          ],
         };
         vegaEmbed("#vis2", yourV2Spec);
 
@@ -257,8 +257,9 @@
     <p>
       This graph to left displays the inner division record for each team of the
       2024-2025 NBA season. You can filter by division using the drop down
-      button. Each division consists of five teams. On the other hand, the heatmap on the right displays how each
-      team performed againsts the other teams in its division.
+      button. Each division consists of five teams. On the other hand, the
+      heatmap on the right displays how each team performed againsts the other
+      teams in its division.
     </p>
 
     <div id="vis4">
